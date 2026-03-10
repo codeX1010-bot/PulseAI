@@ -1,40 +1,11 @@
 {
-    "version": 2,
     "builds": [
         {
             "src": "app.py",
             "use": "@vercel/python"
-        },
-        {
-            "src": "public/**",
-            "use": "@vercel/static"
         }
     ],
     "routes": [
-        {
-            "src": "/api/(.*)",
-            "dest": "app.py"
-        },
-        {
-            "src": "/(css|js|img)/(.*)",
-            "dest": "public/$1/$2"
-        },
-        {
-            "src": "/login.html",
-            "dest": "public/login.html"
-        },
-        {
-            "src": "/admin.html",
-            "dest": "public/admin.html"
-        },
-        {
-            "src": "/doctor.html",
-            "dest": "public/doctor.html"
-        },
-        {
-            "src": "/patient.html",
-            "dest": "public/patient.html"
-        },
         {
             "src": "/(.*)",
             "dest": "app.py"
