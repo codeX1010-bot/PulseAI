@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loginBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Processing...';
         loginBtn.disabled = true;
 
-        const endpoint = isLoginMode ? '/api/auth/login' : '/api/auth/register';
+        const endpoint = isLoginMode ? '/api/login' : '/api/register';
         const payload = {
             email: email,
             password: password,
