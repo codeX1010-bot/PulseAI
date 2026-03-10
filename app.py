@@ -72,6 +72,20 @@ def index():
 def serve_static(path):
     return send_from_directory(os.path.join(BASE_DIR, 'public'), path)
 
+# --- DEBUG (temporary) ---
+@app.route('/debug')
+def debug_info():
+    import glob
+    info = {
+        "BASE_DIR": BASE_DIR,
+        "static_folder": app.static_folder,
+        "cwd": os.getcwd(),
+        "files_in_base": os.listdir(BASE_DIR) if os.path.exists(BASE_DIR) else "BASE_DIR not found",
+        "public_exists": os.path.exists(os.path.join(BASE_DIR, 'public')),
+        "public_files": os.listdir(os.path.join(BASE_DIR, 'public')) if os.path.exists(os.path.join(BASE_DIR, 'public')) else "no public dir",
+    }
+    return jsonify(info)
+
 # --- AUTHENTICATION ENDPOINTS ---
 
 @app.route('/api/auth/register', methods=['POST'])
