@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard - Smart Health AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/premium.css">
+    <style>
+        body {
+            background-color: #f8fafc;
+            display: block !important;
+            padding: 0 !important;
+        }
+
+        .sidebar {
+            min-height: calc(100vh - 70px);
+            background: white;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .nav-link.active {
+            background-color: #eff6ff;
+            color: #2563eb;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+
+        .nav-link {
+            color: #475569;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: #f1f5f9;
+            border-radius: 8px;
+        }
+
+        .stat-card {
+            border: none;
+            border-radius: 12px;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .history-card {
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #2563eb;
+            border-radius: 12px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .history-card:hover {
+            border-color: #cbd5e1;
+            border-left-color: #1e40af;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3 sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold text-primary" href="/index.html">
+                <i class="fa-solid fa-heart-pulse"></i> SmartHealth
+            </a>
+            <div class="d-flex align-items-center">
+                <span class="me-3 fw-medium text-dark"><i class="fa-solid fa-user text-muted me-2"></i> Patient
+                    Doe</span>
+                <button class="btn btn-outline-danger btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar py-4 px-3 d-none d-md-block">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fa-solid fa-house me-2 w-20px text-center"></i> My
+                            Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/index.html"><i
+                                class="fa-solid fa-stethoscope me-2 w-20px text-center"></i> Symptom Checker</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fa-solid fa-calendar-check me-2 w-20px text-center"></i>
+                            My Consultations <span class="badge bg-primary rounded-pill float-end">1</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fa-solid fa-file-medical me-2 w-20px text-center"></i>
+                            Test Reports</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 p-4 p-md-5">
+
+                <div class="d-flex justify-content-between align-items-end mb-4">
+                    <div>
+                        <h2 class="fw-bold mb-1">My Health Overview</h2>
+                        <p class="text-muted mb-0">Track your past predictions and active doctor consultations.</p>
+                    </div>
+                    <a href="/index.html" class="btn btn-primary"><i class="fa-solid fa-plus me-2"></i> New AI
+                        Checkup</a>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="row g-4 mb-5">
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="card stat-card bg-white h-100 shadow-sm border">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="text-muted mb-2 text-uppercase fw-bold">Active Consultations</h6>
+                                        <h2 class="display-6 fw-bold text-dark mb-0">1</h2>
+                                    </div>
+                                    <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-circle">
+                                        <i class="fa-solid fa-user-doctor fs-4"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="card stat-card bg-white h-100 shadow-sm border">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="text-muted mb-2 text-uppercase fw-bold">AI Assessments</h6>
+                                        <h2 class="display-6 fw-bold text-dark mb-0">3</h2>
+                                    </div>
+                                    <div class="bg-success bg-opacity-10 text-success p-3 rounded-circle">
+                                        <i class="fa-solid fa-robot fs-4"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="card stat-card bg-white h-100 shadow-sm border">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="text-muted mb-2 text-uppercase fw-bold">Prescriptions</h6>
+                                        <h2 class="display-6 fw-bold text-dark mb-0">2</h2>
+                                    </div>
+                                    <div class="bg-warning bg-opacity-10 text-warning p-3 rounded-circle">
+                                        <i class="fa-solid fa-pills fs-4"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="fw-bold mb-4">Recent Medical History</h4>
+
+                <div id="historyContainer">
+                    <!-- Mock History 1: Consultation -->
+                    <div class="history-card p-4 mb-3">
+                        <div class="row align-items-center">
+                            <div class="col-md-2 mb-2 mb-md-0">
+                                <span class="text-muted small fw-medium"><i class="fa-regular fa-calendar me-1"></i> Oct
+                                    24, 2023</span>
+                            </div>
+                            <div class="col-md-4 mb-2 mb-md-0">
+                                <h5 class="fw-bold mb-1 text-dark">Consultation: Dr. Smith</h5>
+                                <span class="badge bg-success-subtle text-success rounded-pill px-3">Completed</span>
+                            </div>
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <p class="text-secondary small mb-0">Diagnosis confirmation for Chronic Sinusitis.
+                                    Prescribed Amoxicillin.</p>
+                            </div>
+                            <div class="col-md-2 text-md-end">
+                                <button class="btn btn-outline-primary btn-sm rounded-pill px-3">View Notes</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mock History 2: AI Prediction -->
+                    <div class="history-card p-4 mb-3 border-left" style="border-left-color: #0ea5e9;">
+                        <div class="row align-items-center">
+                            <div class="col-md-2 mb-2 mb-md-0">
+                                <span class="text-muted small fw-medium"><i class="fa-regular fa-calendar me-1"></i> Oct
+                                    22, 2023</span>
+                            </div>
+                            <div class="col-md-4 mb-2 mb-md-0">
+                                <h5 class="fw-bold mb-1 text-dark">AI Symptom Check</h5>
+                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3">89% Match</span>
+                            </div>
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <p class="text-secondary fw-bold small mb-0 text-dark">Result: Chronic Sinusitis</p>
+                                <p class="text-muted small mb-0 text-truncate">Symptoms: chills, fever, muscle_pain,
+                                    headache</p>
+                            </div>
+                            <div class="col-md-2 text-md-end">
+                                <button class="btn btn-primary btn-sm rounded-pill px-3">Book Doctor</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/patient.js"></script>
+</body>
+
+</html>

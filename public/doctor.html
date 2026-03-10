@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard - Clinical Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/premium.css">
+</head>
+
+<body>
+
+    <!-- Clinical Top Navigation -->
+    <nav class="clinical-nav">
+        <a href="doctor.html" class="nav-brand">
+            <i class="fa-solid fa-user-doctor"></i> Smart Health Provider
+        </a>
+        <div class="nav-links">
+            <span class="nav-link fw-bold text-dark me-3">Dr. Smith</span>
+            <a class="nav-link" href="#"><i class="fa-solid fa-chart-line"></i> Analytics</a>
+            <a class="nav-btn" href="#" onclick="logout()">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-wrapper">
+
+        <!-- Left Sidebar: Live Patient Queue -->
+        <div class="patient-queue">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="m-0 fw-bold" style="color: var(--deep-teal);"><i class="fa-solid fa-users-medical"></i> Live
+                    Queue</h5>
+                <span class="badge bg-danger rounded-pill">3 Real-Time</span>
+            </div>
+
+            <div id="queue-container">
+                <!-- Mock Live Database Feed -->
+                <div class="queue-item" onclick="loadPatient(0)">
+                    <div class="queue-time">Just Now</div>
+                    <div class="queue-name">John Doe</div>
+                    <div class="queue-status">High Priority: 89% AI Flag</div>
+                </div>
+                <div class="queue-item" onclick="loadPatient(1)">
+                    <div class="queue-time">5 mins ago</div>
+                    <div class="queue-name">Alice Smith</div>
+                    <div class="queue-status" style="background: #e0f2fe; color: #0284c7;">Routine: 95% AI Flag</div>
+                </div>
+                <div class="queue-item" onclick="loadPatient(2)">
+                    <div class="queue-time">14 mins ago</div>
+                    <div class="queue-name">Robert Johnson</div>
+                    <div class="queue-status" style="background: #e0f2fe; color: #0284c7;">Routine: 76% AI Flag</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Diagnostic Profile -->
+        <div class="consultation-area">
+            <div class="card shadow-sm border-0" id="profile-card" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                    <h4 class="fw-bold m-0" style="color: var(--charcoal);" id="p-name">Patient Name</h4>
+                    <span class="text-muted" id="p-meta">Age: 34 | Sex: M</span>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6 border-end">
+                        <h6 class="text-uppercase fw-bold text-muted small mb-3">Live Server DB Entry</h6>
+                        <div class="p-3 bg-light rounded-3 border mb-3">
+                            <h5 class="fw-bold text-danger mb-1" id="p-disease">Disease Prediction</h5>
+                            <span class="text-muted small fw-bold" id="p-conf">Confidence Score</span>
+                        </div>
+                        <p class="fw-bold mb-1" style="font-size: 0.9rem;">Raw Vector Analysis (Symptoms):</p>
+                        <ul class="text-muted small" id="p-symptoms">
+                            <!-- Populated via JS -->
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6 ps-4">
+                        <h6 class="text-uppercase fw-bold text-muted small mb-3">Interactive Terminal</h6>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">Clinical Notes</label>
+                            <textarea class="form-control bg-light border-1" rows="3"
+                                placeholder="Enter findings..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">Prescription Payload</label>
+                            <input type="text" class="form-control bg-light border-1"
+                                placeholder="e.g. Paracetamol 500mg BID">
+                        </div>
+                        <button class="btn-primary w-100 mt-2" onclick="saveRecord()">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Save to Patient Record
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="card text-center text-muted" id="empty-state"
+                style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                <i class="fa-solid fa-user-injured fa-3x mb-3" style="color: var(--border-color);"></i>
+                <h5>Select a patient from the Live Queue</h5>
+                <p class="small">Live database polling active...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/doctor.js"></script>
+</body>
+
+</html>

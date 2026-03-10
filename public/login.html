@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulse — Sign In</title>
+    <meta name="description" content="Sign in to Pulse, your AI health intelligence platform.">
+
+    <!-- Favicon SVG -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230b0f19'/><path d='M6 17h5l2-6 3 12 3-8 2 2h5' fill='none' stroke='%234ecdc4' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/premium.css">
+
+    <style>
+        body {
+            padding: 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* ── Login Container ───────────────────── */
+        .login-card-wrapper {
+            max-width: 860px;
+            width: 100%;
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--surface-border);
+            overflow: hidden;
+            animation: loginEnter 0.8s var(--ease-out) both;
+        }
+
+        @keyframes loginEnter {
+            from {
+                opacity: 0;
+                transform: scale(0.97) translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* ── Left Brand Panel ──────────────────── */
+        .login-left {
+            background: linear-gradient(160deg, rgba(78, 205, 196, 0.08) 0%, var(--bg-secondary) 50%, rgba(108, 140, 255, 0.06) 100%);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 3rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+            color: var(--text-primary);
+        }
+
+        .login-left::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 1px solid rgba(78, 205, 196, 0.06);
+            bottom: -60px;
+            right: -60px;
+        }
+
+        .login-left .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-left .brand-logo svg {
+            opacity: 0.9;
+        }
+
+        .login-left h2 {
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: -0.5px;
+            line-height: 1.3;
+        }
+
+        .login-left p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.7;
+            margin-top: 12px;
+        }
+
+        .login-left .feature-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 24px;
+        }
+
+        .login-left .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 6px 0;
+        }
+
+        .login-left .feature-list li i {
+            color: var(--accent);
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        /* ── Right Form Panel ──────────────────── */
+        .login-right {
+            padding: 2.5rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-right h2 {
+            font-weight: 800;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .login-right>p {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ── Role Selection ────────────────────── */
+        .role-badge {
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.2s var(--ease-out);
+            letter-spacing: 0.3px;
+        }
+
+        .role-badge i {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            transition: color 0.2s;
+        }
+
+        .role-badge:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+        }
+
+        .role-badge.active {
+            border-color: rgba(78, 205, 196, 0.3);
+            background: var(--accent-muted);
+            color: var(--accent);
+        }
+
+        .role-badge.active i {
+            color: var(--accent);
+        }
+
+        /* ── Form Elements ─────────────────────── */
+        .input-group-custom {
+            position: relative;
+        }
+
+        .input-group-custom i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .input-group-custom .form-control,
+        .input-group-custom select {
+            padding-left: 2.6rem;
+            height: 44px;
+            font-size: 0.85rem;
+        }
+
+        .btn-signin {
+            background: var(--accent);
+            border: none;
+            border-radius: var(--radius-md);
+            height: 48px;
+            color: var(--bg-primary);
+            font-weight: 700;
+            font-size: 0.82rem;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s var(--ease-out);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-signin:hover:not(:disabled) {
+            background: var(--accent-solid);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px var(--accent-glow);
+        }
+
+        .btn-signin:disabled {
+            background: var(--surface);
+            color: var(--text-muted);
+        }
+
+        .toggle-link {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .toggle-link a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Field Stagger ─────────────────────── */
+        .field-animate {
+            animation: fieldIn 0.5s var(--ease-out) both;
+        }
+
+        .field-animate:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .field-animate:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .field-animate:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .field-animate:nth-child(4) {
+            animation-delay: 0.25s;
+        }
+
+        .field-animate:nth-child(5) {
+            animation-delay: 0.3s;
+        }
+
+        .field-animate:nth-child(6) {
+            animation-delay: 0.35s;
+        }
+
+        .field-animate:nth-child(7) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes fieldIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .login-card-wrapper {
+                margin: 16px;
+                border-radius: var(--radius-lg);
+            }
+
+            .login-left {
+                padding: 2rem 1.5rem;
+            }
+
+            .login-right {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ═══ PRELOADER ═══ -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-pulse">
+            <svg viewBox="0 0 120 50">
+                <path class="pulse-line" d="M0 25 H30 L38 10 L50 40 L62 15 L70 25 H120" />
+            </svg>
+        </div>
+        <div class="preloader-text">Pulse AI</div>
+    </div>
+
+    <div class="container p-4">
+        <div class="login-card-wrapper mx-auto">
+            <div class="row h-100 g-0">
+
+                <!-- Left Brand Panel -->
+                <div class="col-md-5 d-none d-md-block p-1">
+                    <div class="login-left">
+                        <div class="brand-logo">
+                            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                                <rect width="32" height="32" rx="7" fill="rgba(78,205,196,0.1)"
+                                    stroke="rgba(78,205,196,0.3)" stroke-width="1" />
+                                <path d="M6 17h5l2-6 3 12 3-8 2 2h5" stroke="#4ecdc4" stroke-width="2.2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <span style="font-weight: 800; font-size: 1.1rem; letter-spacing: -0.3px;">Pulse</span>
+                        </div>
+                        <h2>Intelligent<br>Health Platform</h2>
+                        <p>AI-powered medical consultation, symptom analysis, and specialist recommendations — all in
+                            one place.</p>
+                        <ul class="feature-list">
+                            <li><i class="fa-solid fa-check"></i> AI symptom analysis in seconds</li>
+                            <li><i class="fa-solid fa-check"></i> Consultation history & reports</li>
+                            <li><i class="fa-solid fa-check"></i> Nearest specialist locator</li>
+                            <li><i class="fa-solid fa-check"></i> Secure & private records</li>
+                        </ul>
+                        <img src="img/login_art.png" alt="AI Health Intelligence"
+                            style="width: 100%; max-width: 280px; margin-top: 20px; border-radius: 16px; opacity: 0.85; filter: brightness(0.95);">
+                    </div>
+                </div>
+
+                <!-- Right Form Panel -->
+                <div class="col-md-7">
+                    <div class="login-right h-100">
+                        <h2 class="fw-bold mb-1">Welcome Back</h2>
+                        <p>Sign in to your account</p>
+
+                        <form id="loginForm">
+                            <!-- Role Selection -->
+                            <div class="d-flex gap-3 mb-4 field-animate">
+                                <div class="role-badge flex-fill active" data-role="patient">
+                                    <i class="fa-solid fa-heart-pulse d-block"></i> Patient
+                                </div>
+                                <div class="role-badge flex-fill" data-role="doctor">
+                                    <i class="fa-solid fa-stethoscope d-block"></i> Physician
+                                </div>
+                                <div class="role-badge flex-fill" data-role="admin">
+                                    <i class="fa-solid fa-shield-halved d-block"></i> Admin
+                                </div>
+                            </div>
+
+                            <!-- Full Name (Sign Up only) -->
+                            <div class="mb-3 field-animate" id="nameFieldContainer" style="display: none;">
+                                <label class="form-label mb-1">Full Name</label>
+                                <div class="input-group-custom">
+                                    <i class="fa-regular fa-user"></i>
+                                    <input type="text" class="form-control" id="fullName" placeholder="John Smith">
+                                </div>
+                            </div>
+
+                            <!-- Age & Gender (Sign Up only) -->
+                            <div class="mb-3 field-animate" id="ageGenderContainer" style="display: none;">
+                                <div class="d-flex gap-3">
+                                    <div class="flex-fill">
+                                        <label class="form-label mb-1">Age</label>
+                                        <div class="input-group-custom">
+                                            <i class="fa-regular fa-calendar"></i>
+                                            <input type="number" class="form-control" id="age" placeholder="25" min="1"
+                                                max="120">
+                                        </div>
+                                    </div>
+                                    <div class="flex-fill">
+                                        <label class="form-label mb-1">Gender</label>
+                                        <div class="input-group-custom">
+                                            <i class="fa-solid fa-venus-mars"></i>
+                                            <select class="form-control" id="gender" style="appearance: auto;">
+                                                <option value="" disabled selected>Select</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="mb-3 field-animate">
+                                <label class="form-label mb-1">Email Address</label>
+                                <div class="input-group-custom">
+                                    <i class="fa-regular fa-envelope"></i>
+                                    <input type="email" class="form-control" id="email" required
+                                        placeholder="you@example.com">
+                                </div>
+                            </div>
+
+                            <!-- Locality (Sign Up only) -->
+                            <div class="mb-3 field-animate" id="localityFieldContainer" style="display: none;">
+                                <label class="form-label mb-1">City / Locality</label>
+                                <div class="input-group-custom">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <input type="text" class="form-control" id="locality"
+                                        placeholder="e.g. Mumbai, Maharashtra">
+                                    <button type="button" class="btn btn-sm border-0" id="detectLocationBtn"
+                                        title="Detect automatically"
+                                        style="position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--text-muted);z-index:10;">
+                                        <i class="fa-solid fa-location-crosshairs"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="mb-4 field-animate">
+                                <label class="form-label mb-1">Password</label>
+                                <div class="input-group-custom">
+                                    <i class="fa-solid fa-lock"></i>
+                                    <input type="password" class="form-control" id="password" required
+                                        placeholder="••••••••">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-signin field-animate" id="loginBtn">
+                                Sign In <i class="fa-solid fa-arrow-right ms-1 fs-6"></i>
+                            </button>
+
+                            <div class="text-center mt-3 toggle-link field-animate">
+                                <span id="toggleText">Don't have an account? </span>
+                                <a href="#" id="toggleModeBtn">Sign Up</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('loaded');
+            }, 600);
+        });
+    </script>
+</body>
+
+</html>

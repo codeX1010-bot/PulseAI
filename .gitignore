@@ -1,0 +1,33 @@
+# ── Environment & Secrets ──
+.env
+*.env.local
+
+# ── Python ──
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+
+# ── Node.js ──
+node_modules/
+npm-debug.log*
+
+# ── IDE ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Debug Scripts ──
+inspect_model.py
+test_proba.py
+
+# ── ML Model (too large for GitHub, download separately) ──
+models/health_model.pkl

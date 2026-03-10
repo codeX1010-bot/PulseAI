@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulse — AI Health Intelligence</title>
+  <meta name="description"
+    content="Pulse is an AI-powered health intelligence platform. Get instant medical consultations, symptom analysis, and specialist recommendations.">
+
+  <!-- Favicon SVG -->
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230b0f19'/><path d='M6 17h5l2-6 3 12 3-8 2 2h5' fill='none' stroke='%234ecdc4' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/premium.css">
+</head>
+
+<body>
+
+  <!-- ═══ PRELOADER ═══ -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-pulse">
+      <svg viewBox="0 0 120 50">
+        <path class="pulse-line" d="M0 25 H30 L38 10 L50 40 L62 15 L70 25 H120" />
+      </svg>
+    </div>
+    <div class="preloader-text">Pulse AI</div>
+  </div>
+
+  <!-- ═══ NAVIGATION ═══ -->
+  <nav class="clinical-nav">
+    <a href="index.html" class="nav-brand">
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="7" fill="rgba(78,205,196,0.1)" stroke="rgba(78,205,196,0.3)"
+          stroke-width="1" />
+        <path d="M6 17h5l2-6 3 12 3-8 2 2h5" stroke="#4ecdc4" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+      Pulse
+    </a>
+    <div class="nav-links">
+      <span id="user-welcome" class="nav-link fw-bold"
+        style="color: var(--text-primary); font-size: 0.82rem;">Welcome</span>
+      <a href="#" class="nav-link" id="openProfileBtn"><i class="fa-regular fa-user"></i> Profile</a>
+      <a href="login.html" class="nav-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</a>
+    </div>
+  </nav>
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <div class="dashboard-wrapper">
+
+    <!-- ── Left Sidebar: History ── -->
+    <div class="history-sidebar">
+      <h5><i class="fa-regular fa-clock"></i> Past Reports</h5>
+      <div id="history-container">
+        <div class="text-muted text-center py-4" style="font-size: 0.82rem;">
+          <i class="fa-regular fa-folder-open mb-2 fs-5 opacity-50 d-block"></i>
+          Loading reports...
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Right: Consultation ── -->
+    <div class="consultation-area">
+      <div class="card">
+        <div class="card-header-title mb-2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
+          AI Consultation
+        </div>
+        <div class="card-subtitle">Describe your symptoms in detail. Our AI physician will analyze and ask follow-up
+          questions to provide a diagnosis.</div>
+
+        <!-- Chat Interface -->
+        <div id="chat-container">
+          <div class="chat-message ai-message p-3 mb-3">
+            <strong><i class="fa-solid fa-stethoscope"></i> AI Physician:</strong>
+            <p class="mb-0 mt-2">Hello. I'm your AI health assistant. Please describe how you're feeling today — be as
+              specific as possible about symptoms, duration, and severity.</p>
+          </div>
+        </div>
+
+        <div id="input-area">
+          <textarea id="symptom-text" class="form-control mb-3" rows="3"
+            placeholder="e.g., I've had a sharp pain in my lower right abdomen for the past 2 days, along with mild fever and nausea..."></textarea>
+          <div id="action-buttons" class="d-flex gap-2">
+            <button id="start-btn" class="btn-primary flex-grow-1">
+              <i class="fa-solid fa-arrow-up"></i> Begin Consultation
+            </button>
+            <button id="reset-btn" class="btn btn-outline-secondary" style="display: none;">
+              <i class="fa-solid fa-arrow-rotate-left"></i> New Consultation
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Card -->
+      <div id="result-box" class="result-card mt-3">
+        <div class="d-flex align-items-center mb-3">
+          <div class="prediction-icon me-3">
+            <i class="fa-solid fa-file-medical"></i>
+          </div>
+          <div id="disease-name" class="disease-name">
+            Analysis Pending...
+          </div>
+        </div>
+
+        <!-- Precautions Section -->
+        <div id="precautions-box" style="display: none;">
+          <div class="history-detail-label" style="margin-top: 8px;">Recommended Precautions</div>
+          <div id="precautions-list"></div>
+        </div>
+
+        <button id="locate-specialist-btn" class="btn btn-outline-primary w-100 mt-2" style="display: none;">
+          <i class="fa-solid fa-location-crosshairs"></i> Find Nearest Specialist
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ HERO BANNER ═══ -->
+  <div style="max-width: 1400px; margin: 0 auto; padding: 0 24px 16px;">
+    <div
+      style="background: var(--bg-card); border: 1px solid var(--surface-border); border-radius: 20px; overflow: hidden; display: flex; align-items: center; gap: 0; animation: cardEnter 0.6s cubic-bezier(0.16,1,0.3,1) both; animation-delay: 0.25s;">
+      <div style="flex: 1; padding: 40px 40px;">
+        <div
+          style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 8px;">
+          AI-Powered Diagnostics</div>
+        <h2
+          style="font-size: 1.6rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; line-height: 1.3; margin: 0 0 12px;">
+          Smarter Health Starts<br>With Better Data</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.7; margin-bottom: 20px;">Get real-time
+          symptom analysis, AI-powered medical consultations, and instant specialist recommendations — all from a single
+          conversation.</p>
+        <div style="display: flex; gap: 20px; font-size: 0.78rem; color: var(--text-secondary);">
+          <span><i class="fa-solid fa-bolt" style="color: var(--accent); margin-right: 6px;"></i>Instant Analysis</span>
+          <span><i class="fa-solid fa-lock" style="color: var(--accent); margin-right: 6px;"></i>End-to-End
+            Encrypted</span>
+          <span><i class="fa-solid fa-clock" style="color: var(--accent); margin-right: 6px;"></i>24/7 Available</span>
+        </div>
+      </div>
+      <div style="flex: 0 0 380px; padding: 16px;">
+        <img src="img/medical_hero.png" alt="AI Health Intelligence"
+          style="width: 100%; border-radius: 16px; display: block; opacity: 0.9;">
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ NEARBY HOSPITALS MAP ═══ -->
+  <div class="map-section">
+    <div class="map-card">
+      <div class="map-card-header">
+        <h5><i class="fa-solid fa-hospital"></i> Nearby Hospitals & Clinics</h5>
+        <span class="map-badge" id="map-location-badge"><i class="fa-solid fa-location-dot"
+            style="margin-right:4px;"></i>Detecting...</span>
+      </div>
+      <div class="map-container" id="map-container">
+        <iframe id="hospital-map"
+          src="https://www.google.com/maps/embed/v1/search?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=hospitals+near+me&zoom=13"
+          allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+
+      <!-- Brand Column -->
+      <div>
+        <div class="footer-brand">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="7" fill="rgba(78,205,196,0.1)" stroke="rgba(78,205,196,0.3)"
+              stroke-width="1" />
+            <path d="M6 17h5l2-6 3 12 3-8 2 2h5" stroke="#4ecdc4" stroke-width="2.2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+          <span>Pulse</span>
+        </div>
+        <p class="footer-desc">
+          AI-powered health intelligence platform. Symptom analysis, medical consultation, and specialist
+          recommendations — available 24/7.
+        </p>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">
+          <i class="fa-solid fa-shield-halved" style="margin-right:4px; opacity:0.5;"></i> HIPAA-aware · End-to-end
+          encrypted
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <div class="footer-heading">Platform</div>
+        <ul class="footer-links">
+          <li><a href="index.html"><i class="fa-solid fa-stethoscope"></i>AI Consultation</a></li>
+          <li><a href="#"><i class="fa-regular fa-clock"></i>Past Reports</a></li>
+          <li><a href="#" id="footer-profile-link"><i class="fa-regular fa-user"></i>My Profile</a></li>
+          <li><a href="#"><i class="fa-solid fa-shield-halved"></i>Privacy Policy</a></li>
+        </ul>
+      </div>
+
+      <!-- Emergency -->
+      <div>
+        <div class="footer-heading">Emergency</div>
+        <ul class="footer-links">
+          <li><a href="tel:112"><i class="fa-solid fa-phone"></i>Emergency: 112</a></li>
+          <li><a href="tel:108"><i class="fa-solid fa-truck-medical"></i>Ambulance: 108</a></li>
+          <li><a href="tel:1800-599-0019"><i class="fa-solid fa-heart-pulse"></i>Health Helpline</a></li>
+          <li><a href="#"><i class="fa-solid fa-hospital"></i>Find Hospitals</a></li>
+        </ul>
+      </div>
+
+      <!-- Developers -->
+      <div>
+        <div class="footer-heading">Development Team</div>
+        <div class="footer-developer">
+          <div class="footer-dev-avatar">SB</div>
+          <div>
+            <div class="footer-dev-name">Soumyadeep Bose</div>
+            <div class="footer-dev-role">Lead Developer</div>
+          </div>
+        </div>
+        <div class="footer-developer">
+          <div class="footer-dev-avatar">PA</div>
+          <div>
+            <div class="footer-dev-name">Pulse AI Team</div>
+            <div class="footer-dev-role">AI & Backend</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Pulse Health Intelligence. All rights reserved.</span>
+      <span>Built with <i class="fa-solid fa-heart" style="color: var(--warning); font-size: 0.65rem;"></i> using Flask,
+        Groq AI & MongoDB</span>
+    </div>
+  </footer>
+
+  <!-- ═══ PROFILE MODAL ═══ -->
+  <div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold"><i class="fa-regular fa-user"
+              style="color: var(--accent); margin-right: 8px;"></i>Edit Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Email (Unchangeable)</label>
+            <input type="email" class="form-control" id="profileEmail" disabled>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Full Name</label>
+            <input type="text" class="form-control" id="profileName" placeholder="Update your name">
+          </div>
+          <div class="mb-4">
+            <label class="form-label small fw-bold">Locality / City</label>
+            <div class="input-group mt-1">
+              <input type="text" class="form-control" id="profileLocality" placeholder="e.g. Manhattan, NY">
+              <button class="btn btn-outline-secondary" type="button" id="detectProfileLocalityBtn">
+                <i class="fa-solid fa-location-crosshairs"></i>
+              </button>
+            </div>
+          </div>
+          <div class="mb-4">
+            <div class="d-flex gap-3">
+              <div class="flex-fill">
+                <label class="form-label small fw-bold">Age</label>
+                <input type="number" class="form-control" id="profileAge" placeholder="25" min="1" max="120">
+              </div>
+              <div class="flex-fill">
+                <label class="form-label small fw-bold">Gender</label>
+                <select class="form-control" id="profileGender" style="appearance: auto;">
+                  <option value="" disabled>Select</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn-primary w-100 py-3" id="saveProfileBtn">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    // Preloader
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('preloader').classList.add('loaded');
+      }, 800);
+    });
+
+    // Update map with user's location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const { latitude, longitude } = pos.coords;
+        const mapIframe = document.getElementById('hospital-map');
+        if (mapIframe) {
+          mapIframe.src = `https://www.google.com/maps/embed/v1/search?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=hospitals+near+${latitude},${longitude}&zoom=14`;
+        }
+        // Update badge
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`)
+          .then(r => r.json())
+          .then(data => {
+            const city = data.address.city || data.address.town || data.address.village || 'Your Area';
+            const badge = document.getElementById('map-location-badge');
+            if (badge) badge.innerHTML = `<i class="fa-solid fa-location-dot" style="margin-right:4px;"></i>${city}`;
+          }).catch(() => { });
+      }, () => {
+        const badge = document.getElementById('map-location-badge');
+        if (badge) badge.innerHTML = `<i class="fa-solid fa-location-dot" style="margin-right:4px;"></i>Default`;
+      });
+    }
+  </script>
+</body>
+
+</html>
