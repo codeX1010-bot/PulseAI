@@ -1,14 +1,10 @@
 {
-    "builds": [
+    "buildCommand": "",
+    "outputDirectory": "public",
+    "rewrites": [
         {
-            "src": "app.py",
-            "use": "@vercel/python"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "app.py"
+            "source": "/api/(.*)",
+            "destination": "/api/index"
         }
     ]
 }

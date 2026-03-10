@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from pymongo import MongoClient
 from dotenv import load_dotenv
@@ -11,8 +11,7 @@ import traceback
 # Load environment variables
 load_dotenv()
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-app = Flask(__name__, static_folder=os.path.join(BASE_DIR, 'public'), static_url_path='')
+app = Flask(__name__)
 CORS(app)
 
 # MongoDB Configuration
@@ -63,18 +62,9 @@ def clean_json(raw_text):
     return raw_text
 
 
-# Serve Frontend Pages
-@app.route('/')
-def index():
-    return app.send_static_file('index.html')
-
-@app.route('/<path:path>')
-def serve_static(path):
-    return send_from_directory(os.path.join(BASE_DIR, 'public'), path)
-
 # --- AUTHENTICATION ENDPOINTS ---
 
-@app.route('/api/auth/register', methods=['POST'])
+@app.route('/api/register', methods=['POST'])
 def register():
     try:
         data = request.get_json()
@@ -82,56 +72,64 @@ def register():
         password = data.get('password')
         role = data.get('role', 'patient')
         name = data.get('name', email)
-        locality = data.get('locality', 'New York')
-        age = data.get('age')
+        locality = data.get('locality', '')
+        age = data.get('age', '')
         gender = data.get('gender', '')
 
         if not email or not password:
             return jsonify({"error": "Email and password are required"}), 400
 
-        existing_user = users_collection.find_one({"email": email})
-        if existing_user:
-            return jsonify({"error": "User with this email already exists"}), 409
+        existing = users_collection.find_one({"email": email})
+        if existing:
+            return jsonify({"error": "User already exists"}), 409
 
-        new_user = {
-            "email": email, "password": password, "role": role, "name": name,
-            "locality": locality, "age": age, "gender": gender,
+        user = {
+            "email": email,
+            "password": password,
+            "role": role,
+            "name": name,
+            "locality": locality,
+            "age": age,
+            "gender": gender,
             "created_at": datetime.now()
         }
-        result = users_collection.insert_one(new_user)
-        return jsonify({"message": "User registered successfully", "userId": str(result.inserted_id), "role": role, "email": email, "name": name, "locality": locality, "age": age, "gender": gender}), 201
+        users_collection.insert_one(user)
+        return jsonify({"message": "Registration successful", "role": role}), 201
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print(traceback.format_exc())
+        return jsonify({"error": "Registration failed"}), 500
 
-@app.route('/api/auth/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     try:
         data = request.get_json()
-        email, password, role = data.get('email'), data.get('password'), data.get('role')
-        user = users_collection.find_one({"email": email})
-        if not user or user['password'] != password:
+        email = data.get('email')
+        password = data.get('password')
+
+        user = users_collection.find_one({"email": email, "password": password})
+        if not user:
             return jsonify({"error": "Invalid credentials"}), 401
-        if role and user['role'] != role:
-            return jsonify({"error": f"Role mismatch. Registered as {user['role']}"}), 403
+
         return jsonify({
-            "userId": str(user['_id']), 
-            "email": user['email'], 
-            "role": user['role'], 
+            "message": "Login successful",
+            "role": user['role'],
+            "email": user['email'],
             "name": user.get('name', user['email']),
-            "locality": user.get('locality', 'New York'),
+            "locality": user.get('locality', ''),
             "age": user.get('age', ''),
             "gender": user.get('gender', '')
         }), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print(traceback.format_exc())
+        return jsonify({"error": "Login failed"}), 500
 
 @app.route('/api/user/profile/<email>', methods=['GET'])
 def get_profile(email):
     user = users_collection.find_one({"email": email})
     if not user: return jsonify({"error": "User not found"}), 404
     return jsonify({
-        "email": user['email'], 
-        "role": user['role'], 
+        "email": user['email'],
+        "role": user['role'],
         "name": user.get('name', user['email']),
         "locality": user.get('locality', 'Not Set'),
         "age": user.get('age', ''),
@@ -146,13 +144,13 @@ def update_profile():
     new_locality = data.get('locality')
     new_age = data.get('age')
     new_gender = data.get('gender')
-    
+
     update_data = {}
     if new_name: update_data["name"] = new_name
     if new_locality: update_data["locality"] = new_locality
     if new_age is not None: update_data["age"] = new_age
     if new_gender: update_data["gender"] = new_gender
-    
+
     users_collection.update_one({"email": email}, {"$set": update_data})
     return jsonify({"message": "Profile updated", "name": new_name, "locality": new_locality, "age": new_age, "gender": new_gender}), 200
 
@@ -162,41 +160,41 @@ def update_profile():
 def start_consultation():
     if groq_client is None:
         return jsonify({"error": "AI is not configured. Please set GROQ_API_KEY and restart."}), 503
-        
+
     try:
         data = request.get_json()
         text = data.get('text', '')
-        
-        prompt = f"""Act as a medical assistant. The user says: "{text}"
-Extract the core medical symptoms from this text. 
-Format the output as a JSON list of strings. 
-Only return the JSON list, nothing else."""
-        
-        raw_text = ask_ai(prompt)
-        symptoms = json.loads(clean_json(raw_text))
+
+        prompt = f"""From this patient description, extract ONLY the medical symptoms as a simple list.
+Patient says: "{text}"
+Return a JSON array of symptom strings. Example: ["headache", "fever", "nausea"]
+Return ONLY the JSON array."""
+
+        raw_response = ask_ai(prompt)
+        symptoms = json.loads(clean_json(raw_response))
         return jsonify({"symptoms": symptoms})
     except Exception as e:
         print(traceback.format_exc())
-        return jsonify({"error": "AI Extraction failed. Please try again."}), 500
+        return jsonify({"error": "Failed to process symptoms"}), 500
 
 @app.route('/api/consultation/question', methods=['POST'])
 def get_consultation_question():
     if groq_client is None:
         return jsonify({"error": "AI is not configured."}), 503
-        
+
     try:
         data = request.get_json()
         symptoms = data.get('symptoms', [])
         qa_history = data.get('qa_history', [])
-        
-        prompt = f"""Act as a medical doctor. 
-The patient has these symptoms: {symptoms}
-Our conversation history is: {qa_history}
 
-Ask ONE relevant follow-up question to help narrow down the diagnosis.
-Keep the question concise and professional.
-Return ONLY the question text."""
-        
+        prompt = f"""You are a medical doctor conducting a patient consultation.
+Known symptoms: {symptoms}
+Previous Q&A: {qa_history}
+
+Ask ONE focused follow-up question to help narrow down the diagnosis.
+The question should be specific, medical, and help differentiate between possible conditions.
+Return ONLY the question text, nothing else."""
+
         question = ask_ai(prompt)
         return jsonify({"question": question})
     except Exception as e:
@@ -207,7 +205,7 @@ Return ONLY the question text."""
 def finish_consultation():
     if groq_client is None:
         return jsonify({"error": "AI is not configured."}), 503
-        
+
     try:
         data = request.get_json()
         email = data.get('email')
@@ -215,7 +213,7 @@ def finish_consultation():
         qa_history = data.get('qa_history', [])
         latitude = data.get('latitude')
         longitude = data.get('longitude')
-        
+
         prompt = f"""Act as a specialist medical diagnostic assistant.
 Patient Symptoms: {symptoms}
 Consultation Q&A: {qa_history}
@@ -229,16 +227,16 @@ For EACH condition, provide:
 5. Priority level ("priority"): "Urgent" or "Routine".
 6. A list of 3-4 specific precautions the patient should take immediately ("precautions")
 
-Format your response as a JSON list of objects: 
+Format your response as a JSON list of objects:
 [
     {{"disease": "Condition Name", "confidence": 85, "advice": "...", "specialist": "Cardiologist", "priority": "Urgent", "precautions": ["Avoid strenuous activity", "Stay hydrated", "Monitor temperature"]}},
     ...
 ]
 Return ONLY the JSON list."""
-        
+
         raw_text = ask_ai(prompt)
         predictions = json.loads(clean_json(raw_text))
-        
+
         # Save to history
         record = {
             "email": email,
@@ -250,7 +248,7 @@ Return ONLY the JSON list."""
             "timestamp": datetime.now()
         }
         history_collection.insert_one(record)
-        
+
         return jsonify({"predictions": predictions})
     except Exception as e:
         print(traceback.format_exc())
@@ -281,6 +279,3 @@ def get_user_history(email):
     except Exception as e:
         print(traceback.format_exc())
         return jsonify({"history": []}), 200
-
-if __name__ == '__main__':
-    app.run(port=5001, debug=True)
