@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, redirect
 from flask_cors import CORS
 from pymongo import MongoClient
 from dotenv import load_dotenv
@@ -66,7 +66,7 @@ def clean_json(raw_text):
 # Serve Frontend Pages
 @app.route('/')
 def index():
-    return app.send_static_file('index.html')
+    return redirect('/login.html')
 
 @app.route('/<path:path>')
 def serve_static(path):
