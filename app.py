@@ -12,7 +12,7 @@ import traceback
 load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-app = Flask(__name__, static_folder=os.path.join(BASE_DIR, 'public'), static_url_path='')
+app = Flask(__name__, static_folder=os.path.join(BASE_DIR, 'static'), static_url_path='')
 CORS(app)
 
 # MongoDB Configuration
@@ -70,7 +70,7 @@ def index():
 
 @app.route('/<path:path>')
 def serve_static(path):
-    return send_from_directory(os.path.join(BASE_DIR, 'public'), path)
+    return send_from_directory(os.path.join(BASE_DIR, 'static'), path)
 
 # --- DEBUG (temporary) ---
 @app.route('/debug')
@@ -81,8 +81,8 @@ def debug_info():
         "static_folder": app.static_folder,
         "cwd": os.getcwd(),
         "files_in_base": os.listdir(BASE_DIR) if os.path.exists(BASE_DIR) else "BASE_DIR not found",
-        "public_exists": os.path.exists(os.path.join(BASE_DIR, 'public')),
-        "public_files": os.listdir(os.path.join(BASE_DIR, 'public')) if os.path.exists(os.path.join(BASE_DIR, 'public')) else "no public dir",
+        "public_exists": os.path.exists(os.path.join(BASE_DIR, 'static')),
+        "public_files": os.listdir(os.path.join(BASE_DIR, 'static')) if os.path.exists(os.path.join(BASE_DIR, 'static')) else "no static dir",
     }
     return jsonify(info)
 
