@@ -8,6 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginBtn = document.getElementById('loginBtn');
     const toggleText = document.getElementById('toggleText');
     const toggleModeBtn = document.getElementById('toggleModeBtn');
+    const rememberMeContainer = document.getElementById('rememberMeContainer');
+    const rememberMeCheckbox = document.getElementById('rememberMe');
+
+    // Auto-fill remembered email
+    const rememberedEmail = localStorage.getItem('remembered_email');
+    if (rememberedEmail) {
+        document.getElementById('email').value = rememberedEmail;
+        if (rememberMeCheckbox) rememberMeCheckbox.checked = true;
+    }
+
+
 
     // --- Geolocation Helper ---
     async function detectLocation(inputElement, btnElement) {
@@ -68,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.login-right h2').innerText = 'Welcome Back';
             document.querySelector('.login-right p').innerText = 'Please sign in to your account';
             loginBtn.innerHTML = 'SIGN IN <i class="fa-solid fa-arrow-right ms-2 fs-6"></i>';
+            if (rememberMeContainer) rememberMeContainer.style.display = 'flex';
             toggleText.innerText = "Don't have an account? ";
             toggleModeBtn.innerText = "Sign Up";
 
@@ -81,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.login-right h2').innerText = 'Create Account';
             document.querySelector('.login-right p').innerText = 'Register your credentials';
             loginBtn.innerHTML = 'SIGN UP <i class="fa-solid fa-user-plus ms-2 fs-6"></i>';
+            if (rememberMeContainer) rememberMeContainer.style.display = 'none';
             toggleText.innerText = "Already have an account? ";
             toggleModeBtn.innerText = "Sign In";
 
@@ -155,6 +168,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // Success! Create session.
             if (!isLoginMode) {
                 alert("Account created successfully! Logging you in...");
+            } else {
+                // Remember Me
+                if (rememberMeCheckbox && rememberMeCheckbox.checked) {
+                    localStorage.setItem('remembered_email', email);
+                } else {
+                    localStorage.removeItem('remembered_email');
+                }
             }
 
             executeLogin(data.role, data.email, data.name || data.email, data.locality || '', data.age || '', data.gender || '');
