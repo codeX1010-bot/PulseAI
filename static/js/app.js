@@ -8,6 +8,54 @@ document.addEventListener("DOMContentLoaded", async () => {
         userNameElement.innerText = `${userName}`;
     }
 
+    // ── Theme Toggle ──
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('pulse_theme') || 'dark';
+
+    // Apply saved theme
+    if (currentTheme === 'light') {
+        document.body.setAttribute('data-theme', 'light');
+        if (themeToggleBtn) themeToggleBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+    }
+
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.body.hasAttribute('data-theme')) {
+                document.body.removeAttribute('data-theme');
+                localStorage.setItem('pulse_theme', 'dark');
+                themeToggleBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+            } else {
+                document.body.setAttribute('data-theme', 'light');
+                localStorage.setItem('pulse_theme', 'light');
+                themeToggleBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+            }
+        });
+    }
+
+    // ── Tab Switching Logic ──
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+
+            // Remove active from all buttons and panes
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabPanes.forEach(p => p.classList.remove('active'));
+
+            // Add active to clicked button and corresponding pane
+            btn.classList.add('active');
+            const targetPane = document.getElementById(targetId);
+            if (targetPane) {
+                targetPane.classList.add('active');
+
+                // Triggers reflow to restart CSS animation (for fade-in)
+                void targetPane.offsetWidth;
+            }
+        });
+    });
+
     // ── Geolocation Helper ──
     async function detectLocation(inputElement, btnElement) {
         if (!navigator.geolocation) {

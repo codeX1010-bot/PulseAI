@@ -51,6 +51,28 @@
     --border-color: rgba(255, 255, 255, 0.06);
 }
 
+[data-theme="light"] {
+    --bg-primary: #f1f5f9;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f8fafc;
+    --bg-card: rgba(255, 255, 255, 0.85);
+    --bg-elevated: rgba(255, 255, 255, 0.95);
+
+    --accent: #0f766e;
+    --accent-muted: rgba(15, 118, 110, 0.08);
+    --accent-glow: rgba(15, 118, 110, 0.15);
+    --accent-solid: #0d9488;
+    --accent-secondary: #4f46e5;
+
+    --surface: #f8fafc;
+    --surface-border: rgba(15, 23, 42, 0.08);
+    --surface-hover: rgba(15, 118, 110, 0.04);
+
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+}
+
 /* ── Reset & Base ─────────────────────────────────────────────── */
 *,
 *::before,
@@ -275,18 +297,82 @@ body::before {
 
 /* ================================================================
    DASHBOARD LAYOUT — High Density Grid
-   ================================================================ */
+   ================================================================*/
+/* ── MAIN LAYOUT GRID ──────────────────────────────────── */
 .dashboard-wrapper {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 16px;
-    padding: 16px 24px;
+    display: flex;
+    gap: 24px;
     max-width: 1400px;
     margin: 0 auto;
-    min-height: calc(100vh - 64px);
+    padding: 0 24px 32px;
+    flex: 1;
+    position: relative;
+    z-index: 2;
 }
 
-/* ── Quick Stats Row ─── */
+/* ── TABS AND ANIMATIONS ───────────────────────────────── */
+.tab-navigation-wrapper {
+    max-width: 1400px;
+    margin: 20px auto 30px;
+    padding: 0 24px;
+    display: flex;
+    justify-content: center;
+}
+
+.tab-navigation {
+    display: flex;
+    background: var(--surface);
+    padding: 6px;
+    border-radius: var(--radius-pill);
+    gap: 8px;
+    border: 1px solid var(--surface-border);
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    padding: 10px 24px;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.85rem;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tab-btn:hover {
+    color: var(--text-primary);
+}
+
+.tab-btn.active {
+    background: var(--bg-card);
+    color: var(--accent);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--surface-border);
+}
+
+.tab-pane {
+    display: none;
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── SIDEBAR (HISTORY) ─────────────────────────────────── */
 .stats-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -467,8 +553,7 @@ body::before {
     }
 }
 
-/* ── Textarea ─────────────────────────────────────────────────── */
-#symptom-text,
+
 textarea.form-control {
     background: rgba(22, 28, 46, 0.6);
     border: 1px solid var(--surface-border);
