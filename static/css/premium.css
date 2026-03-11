@@ -493,7 +493,7 @@ body::before {
     min-height: 0;
     max-height: none;
     overflow-y: auto;
-    background: rgba(11, 15, 25, 0.4);
+    background: var(--bg-primary);
     border-radius: var(--radius-md);
     padding: 16px;
     border: 1px solid var(--surface-border);
@@ -525,7 +525,7 @@ body::before {
 .user-message {
     border-right: 2px solid var(--accent-secondary) !important;
     border-radius: var(--radius-md) 2px var(--radius-md) var(--radius-md) !important;
-    background: rgba(108, 140, 255, 0.04) !important;
+    background: var(--surface-hover) !important;
 }
 
 .chat-message strong {
@@ -555,7 +555,7 @@ body::before {
 
 
 textarea.form-control {
-    background: rgba(22, 28, 46, 0.6);
+    background: var(--surface);
     border: 1px solid var(--surface-border);
     border-radius: var(--radius-md);
     padding: 14px 16px;
@@ -577,7 +577,7 @@ textarea.form-control:focus {
     border-color: rgba(78, 205, 196, 0.3);
     box-shadow: 0 0 0 3px var(--accent-muted);
     outline: none;
-    background: rgba(22, 28, 46, 0.9);
+    background: var(--bg-secondary);
 }
 
 /* ================================================================
@@ -831,7 +831,7 @@ textarea.form-control:focus {
    FORM CONTROLS
    ================================================================ */
 .form-control {
-    background: rgba(22, 28, 46, 0.6);
+    background: var(--surface);
     border-radius: var(--radius-sm);
     border: 1px solid var(--surface-border);
     padding: 10px 14px;
@@ -849,13 +849,13 @@ textarea.form-control:focus {
     border-color: rgba(78, 205, 196, 0.3);
     box-shadow: 0 0 0 3px var(--accent-muted);
     outline: none;
-    background: rgba(22, 28, 46, 0.9);
+    background: var(--bg-secondary);
     color: var(--text-primary);
 }
 
 .form-control:disabled,
 .form-control.bg-light {
-    background: rgba(22, 28, 46, 0.3) !important;
+    background: var(--bg-tertiary) !important;
     color: var(--text-muted) !important;
     border-color: rgba(255, 255, 255, 0.03) !important;
 }
